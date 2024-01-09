@@ -1,1 +1,2 @@
-# Data_Course_JOHNSTONThis README file contains information about my uploaded assignments
+# Data_Course_JOHNSTON
+This README file contains information about my uploaded assignments
