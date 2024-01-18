@@ -7,7 +7,6 @@ length(csv_files)
 
 # 6
 df <- read.csv(list.files(pattern = 'wingspan_vs_mass.csv', recursive = TRUE), header = TRUE)
-df
 
 # 7
 head(df, n=5)
@@ -20,7 +19,6 @@ b_files
 for (i in b_files) {
     print(readLines(i, n=1))
 }
-
 
 # 10
 for (i in csv_files) {
