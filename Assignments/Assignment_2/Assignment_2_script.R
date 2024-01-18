@@ -21,6 +21,8 @@ for (i in b_files) {
 }
 
 # 10
+all_csv_files <- list.files(recursive=TRUE, pattern='.csv', full.names = TRUE)
+
 for (i in csv_files) {
     print(readLines(i, n=1))
 }
