@@ -156,13 +156,15 @@ library(tidyverse)
 seq(2,150,2) # here's the code to get a list of the even numbers between 2 and 150
 
 iris_even <- iris[seq(2,150,2),]
-
+iris_even
 
 # 2.  Create a new object called iris_chr which is a copy of iris, except where every column is a character class
-iris_chr <- apply(iris,2,as.character)
+iris_chr <- iris %>%
+    apply(2,as.character)
 
 # 3.  Create a new numeric vector object named "Sepal.Area" which is the product of Sepal.Length and Sepal.Width
 Sepal.Area <- iris$Sepal.Length*iris$Sepal.Width
+
 
 # 4.  Add Sepal.Area to the iris data frame as a new column
 iris <- iris %>%

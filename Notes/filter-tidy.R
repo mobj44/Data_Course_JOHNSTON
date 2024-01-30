@@ -48,7 +48,7 @@ penguins %>%
 
 x <- penguins %>%
     mutate(fatstat = case_when(body_mass_g > 5000 ~ "fattie", body_mass_g <= 5000 ~ "skinny"))
-
+# Plotting ####
 x %>%
     filter(!is.na(sex)) %>%
     ggplot(mapping = aes(x = body_mass_g,
@@ -63,3 +63,58 @@ x %>%
 
 # ggmap gis mapping using ggplot
 # google maps with R
+
+## :: is called namespace ####
+# basically package
+
+# barplot ####
+names(penguins)
+penguins %>%
+    ggplot(mapping = aes(x = flipper_length_mm, y = body_mass_g, fill = species)) +
+    geom_col() # bar chart uses position stack
+# position dodge wil put next to eachother
+
+# scatter plot ####
+penguins %>%
+    ggplot(mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+    geom_point()
+
+penguins %>%
+    ggplot(mapping = aes(x = flipper_length_mm, fill = species)) +
+    geom_bar() # more of histogram, uses stat_count()
+
+penguins %>%
+    ggplot(mapping = aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+    geom_line(aes(group=species))
+
+penguins %>%
+    ggplot(mapping = aes(x = flipper_length_mm,
+                         y = body_mass_g,
+                         color = species,
+                         alpha = bill_depth_mm)) +
+
+    geom_path(aes(group=species)) +
+    stat_ellipse() +
+    geom_point(aes(color=sex)) +
+    geom_polygon() +
+    geom_hex() +
+    geom_bin_2d() +
+    geom_boxplot() +
+    geom_hline(yintercept = 4500,
+               linewidth=25,
+               color='magenta',
+               linetype = '11',
+               alpha=.45) +
+    geom_point(color="yellow", aes(alpha=bill_depth_mm)) +
+    theme(axis.title = element_text(face = 'italic',
+                                    size = 12,
+                                    angle = 30),
+          legend.background = element_rect(fill = 'hotpink',
+                                           color = 'blue',
+                                           linewidth = 5))
+    #geom_image(image='~/Documents/pengin.jpeg')
+# alpha = transparency
+
+library(ggimage)
+
+names(penguins)
