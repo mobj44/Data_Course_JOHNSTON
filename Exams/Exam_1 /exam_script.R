@@ -1,16 +1,16 @@
 library(tidyverse)
 library(stringr)
 
-# I. Read the cleaned_covid_data.csv file into an R data frame. (20 pts) ####
+# I. Read the cleaned_covid_data.csv file into an R data frame. ####
 df <- read_csv("./data/cleaned_covid_data.csv")
 
 # II. Subset the data set to just show states that begin with “A” and save this ####
-# as an object called A_states. (20 pts)
+# as an object called A_states.
 A_states <- df %>% 
   filter(grepl('^A',Province_State))
 
 # III. Create a plot of that subset showing Deaths over time, with a separate ####
-# facet for each state. (20 pts)
+# facet for each state.
 A_states %>% 
   ggplot(mapping = aes(x = Last_Update,
                        y = Deaths,
@@ -25,7 +25,7 @@ A_states %>%
 
 # IV. (Back to the full dataset) Find the “peak” of Case_Fatality_Ratio ####
 # for each state and save this as a new data frame object called 
-# state_max_fatality_rate. (20 pts)
+# state_max_fatality_rate. 
 state_max_fatality_rate <- df %>% 
   filter(!is.na(Case_Fatality_Ratio)) %>% 
   group_by(Province_State) %>% 
@@ -33,7 +33,7 @@ state_max_fatality_rate <- df %>%
   arrange(desc(Maximum_Fatality_Ratio))
 
 
-# V. Use that new data frame from task IV to create another plot. (20 pts) ####
+# V. Use that new data frame from task IV to create another plot. ####
 state_max_fatality_rate %>% 
   ggplot(aes(x = reorder(Province_State, -Maximum_Fatality_Ratio),
              y = Maximum_Fatality_Ratio)) +
@@ -58,5 +58,3 @@ cumulative_deaths %>%
   theme(plot.title = element_text(hjust=0.5)) +
   labs(x = "Date",
        y = "Deaths")
-
-sum(df$Deaths)
