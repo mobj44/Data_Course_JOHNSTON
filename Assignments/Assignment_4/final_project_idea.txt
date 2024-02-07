@@ -1,0 +1,2 @@
+The idea for my project is to analyze the data for the TV show Survivor. I found a R library called survivoR from https://github.com/doehm/survivoR. I'm thinking about analyzing voting patterns, analyze alliances in the show, or a predictive model to determine future winners. 
+The survivoR package contains several data sets for different aspects of the show such as player demographics, voting history, idols found, challenges won, and much more. 
