@@ -52,6 +52,21 @@ table5 %>%
 # Reading excel ####
 dat <- read_xlsx("./Data/messy_bp.xlsx", skip = 3)
 
+names(dat)
+clean_names(dat)
+
+
+n_visits <- dat %>%
+    select(starts_with('BP')) %>%
+    length()
+1:n_visits
+
+# which ####
+which(grepl("^BP", names(bp)))
+paste0('visit',1:n_visits)
+
+names(dat)[8:10]
+
 bp <- dat %>%
     select(-starts_with("HR")) %>%
     pivot_longer(cols = starts_with("BP"),
@@ -94,6 +109,7 @@ df %>%
     ggplot(aes(x = visit, y = bp,color = bp_type)) +
     geom_path() +
     facet_wrap(~race)
+
 
 # start with fresh R scritp
 # dont look at this code
