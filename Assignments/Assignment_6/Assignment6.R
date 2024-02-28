@@ -2,7 +2,7 @@ library(tidyverse)
 library(janitor)
 library(gganimate)
 
-df <- read_csv("./Data/BioLog_Plate_Data.csv")
+df <- read_csv("../../Data/BioLog_Plate_Data.csv")
 
 
 df <-
@@ -30,7 +30,7 @@ dilution_plot <- df %>%
          y = "Time",
          color = "Type")
 dilution_plot
-ggsave("dilution_plot.png", path = "./Assignments/Assignment_6/")
+ggsave("./dilution_plot.png")
 
 
 animated_plot <- df %>%
@@ -45,7 +45,8 @@ animated_plot <- df %>%
     transition_reveal(hours) +
     theme_minimal()+
     labs(x = "Time", y = "Mean_absorbance", color = "Sample ID")
+animated_plot
 
-anim_save("abs_anim.gif",animation = animated_plot, path = "./Assignments/Assignment_6/")
+anim_save("./abs_plot.gif",animation = animated_plot)
 
 
