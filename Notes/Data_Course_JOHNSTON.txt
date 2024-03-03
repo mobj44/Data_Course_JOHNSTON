@@ -1,0 +1,6 @@
+Rentrez
+Decipher
+Phangorn
+Rvest/httr
+
+roxygen2
