@@ -47,24 +47,27 @@ df$mod2 <- predict(mod2, df)
 df$mod3 <- predict(mod3, df)
 
 df <- df %>%
-    pivot_longer(starts_with("mod"), values_to = "pred")
+    pivot_longer(starts_with("mod"), names_to = "Model",values_to = "Prediction")
 
 df %>%
     ggplot(aes(x = Year,
-               y = pred,
+               y = Prediction,
                color = Continent)) +
     geom_smooth(method = "lm") +
-    facet_wrap(~name) +
+    facet_wrap(~Model) +
     theme_bw() +
     labs(title = "Model predictions",
          x = "Year",
          y = "Predicted U5MR")
 
+ggsave("model_predictions.png")
+
 # 10.
 ecuador_data <- df %>%
     filter(CountryName == "Ecuador")
 
-mod4 <- glm(U5MR ~ poly(Year, 2, raw=TRUE), data = ecuador_data)
+mod4 <- glm(U5MR ~ poly(Year, 2),
+            data = ecuador_data)
 
 predicted_ecuador_2020 <- predict(mod4, newdata = data.frame(Year = 2020))
 
