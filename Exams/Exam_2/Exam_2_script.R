@@ -15,7 +15,8 @@ df <- df %>%
 df %>%
     ggplot(aes(x = Year, y = U5MR, group = CountryName)) +
     geom_line() +
-    facet_wrap(~Continent)
+    facet_wrap(~Continent) +
+    theme_bw()
 
 # 4. Save this plot as LASTNAME_Plot_1.png
 ggsave(filename = "./JOHNSTON_Plot_1.png")
@@ -26,7 +27,8 @@ df %>%
     mutate(Mean_U5MR = mean(U5MR, na.rm = TRUE)) %>%
     ggplot(aes(x = Year, y = Mean_U5MR, color = Continent, group = Continent)) +
     geom_point(size = 1) +
-    geom_line(aes(y = Mean_U5MR), size = 2.5,na.rm = TRUE)
+    geom_line(aes(y = Mean_U5MR), size = 2.5,na.rm = TRUE) +
+    theme_bw()
 
 # 6. Save that plot as LASTNAME_Plot_2.png
 ggsave(filename = "./JOHNSTON_Plot_2.png")
