@@ -1,0 +1,6 @@
+1. I don't think there are any meaningless values because my values fall within the ranges of the real data. 
+2. I don't think there are any non linear relationships. 
+	https://zief0002.github.io/book-8252/nonlinearity-log-transforming-the-predictor.html
+	https://www.geeksforgeeks.org/non-linear-regression-in-r/
+3. 
+df <- read_csv("../../Data/non_linear_relationship.csv")df %>%     mutate(log_response = log(response)) %>%     ggplot(aes(x = predictor, y = log_response)) +    geom_point() +    geom_smooth()df <- df %>%     mutate(log_response = log(response))mod5 <- glm(data = df, formula = log_response ~ predictor)summary(mod5)
