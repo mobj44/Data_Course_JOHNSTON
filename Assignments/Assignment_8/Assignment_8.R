@@ -1,4 +1,3 @@
-library(modelr)
 library(easystats)
 library(tidyverse)
 library(caret)
