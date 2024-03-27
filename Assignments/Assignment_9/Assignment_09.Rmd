@@ -1,0 +1,137 @@
+---
+title: "Assignment 9"
+author: "Morgan Johnston"
+output: 
+    prettydoc::html_pretty:
+        theme: cayman
+        toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load in packages  
+```{r, message=FALSE}
+library(tidyverse)
+library(easystats)
+library(modelr)
+library(GGally)
+library(caret)
+```
+
+### Loading in Data  
+```{r}
+df <- read_csv("../../Data/GradSchool_Admissions.csv")
+```
+### Look at the structure of Grad School Admissions data
+```{r}
+glimpse(df)
+```
+
+
+### Plots to explore the data  
+
+```{r}
+df %>% ggpairs()
+
+df %>% 
+    ggplot(aes(x = gre, y = gpa, color = factor(admit))) +
+    geom_point() +
+    scale_color_manual(values = c('royalblue1', 'springgreen3')) +
+    facet_wrap(~rank)
+```
+I'm going to model on admit, the graphs above don't appear to show gre, gpa, or rank as being more significant than the others.  
+
+### Creating models
+```{r}
+mod1 <- glm(data = df, 
+            as.logical(admit) ~ gre * gpa * rank,
+            family = "binomial")
+
+mod2 <- glm(data = df, 
+            as.logical(admit) ~ gre + gpa + rank,
+            family = "binomial")
+
+mod3 <- glm(data = df, 
+            as.logical(admit) ~ gre + gpa * rank,
+            family = "binomial")
+
+mod4 <- glm(data = df, 
+            as.logical(admit) ~ gre * gpa + rank,
+            family = "binomial")
+
+```  
+All of the models are pretty similar in their RMSE and R2 scores. Model 1 and 4 both have their benefits, but model 1 is less complex so we dont need to worry about overfitting.
+
+### Comparing model preformance  
+```{r, message=FALSE}
+compare_performance(mod1, mod2, mod3, mod4)
+compare_performance(mod1, mod2, mod3, mod4) %>% 
+    plot()
+```
+
+### Looking at predictions
+
+```{r, echo=FALSE}
+df$pred1 <- predict(mod1, df, type = 'response')
+df$pred2 <- predict(mod2, df, type = 'response')
+df$pred3 <- predict(mod3, df, type = 'response')
+df$pred4 <- predict(mod4, df, type = 'response')
+```
+
+
+```{r}
+
+df %>%
+    gather_predictions(mod1, mod2, mod3, mod4) %>% 
+    ggplot(aes(x = gre, y = pred, color = factor(rank))) +
+    geom_point(alpha = .25) +
+    geom_smooth() +
+    facet_wrap(~model)
+
+df %>%
+    gather_predictions(mod1, mod2, mod3, mod4) %>% 
+    ggplot(aes(x = factor(rank), y = pred, color = factor(rank))) +
+    geom_jitter(alpha = .25) +
+    geom_boxplot() +
+    facet_wrap(~model)
+
+df %>% 
+    gather_predictions(mod1, mod2, mod3, mod4) %>% 
+    ggplot(aes(x = gpa, y = pred, color = factor(model))) +
+    geom_point(alpha = .25) +
+    geom_smooth() +
+    facet_wrap(~rank)
+```
+
+Looking at these three plots you can see that the 4 models are performing similarly to each other. I want to do a cross validation to see how model 1 and model 4 perform. To do so I will split the data "randomly" into training and testing sets. 
+
+```{r}
+id <- createDataPartition(df$admit, p = 0.8, list = FALSE)
+
+train <- df[id,]
+test <- df[-id,]
+```
+
+### Retraining the models
+```{r}
+mod1_formula <- mod1$formula
+mod1 <- glm(data = train, formula = mod1_formula)
+
+mod4_formula <- mod4$formula
+mod4 <- glm(data = train, formula = mod4_formula)
+```
+
+### Then evaluate the retrained models
+```{r}
+gather_predictions(test, mod1, mod4) %>% 
+    ggplot(aes(x = factor(rank), y = pred, color = factor(rank))) + 
+    geom_jitter(alpha = 0.25) +
+    geom_boxplot() +
+    facet_wrap(~model)
+
+compare_performance(mod1, mod4)
+```
+
+
