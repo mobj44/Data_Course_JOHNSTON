@@ -1,0 +1,123 @@
+---
+title: "Tornados"
+author: "Morgan Johnston"
+output: 
+    html_document:
+        theme: cerulean
+        code_folding: show
+        code_download: TRUE
+        toc: TRUE
+        toc_float: TRUE
+        highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Project Goal
+
+Will go here
+
+### Background Information
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/oWIx3Erswh8?si=7g1YUsluofm4WyGW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen data-external="1"></iframe>
+
+### Project Importance
+
+Will go here
+
+## Loading in Data
+```{r, message = FALSE}
+library(tidyverse)
+library(easystats)
+library(modelr)
+library(DT)
+library(MASS)
+library(leaflet)
+library(shiny)
+library(bslib)
+```
+```{r, include = FALSE}
+df <- read_csv("./1950-2022_all_tornadoes.csv")
+
+torn_names <- c(number_so_far = 'om',
+              year = 'yr',
+              month = 'mo',
+              day = 'dy',
+              date = 'date',
+              time = 'time',
+              timezone = 'tz',
+              state_abbr = 'st',
+              state_fips = 'stf',
+              state_number = 'stn',
+              f_scale = 'mag',
+              injuries = 'inj',
+              fatalities = 'fat',
+              property_loss = 'loss',
+              crop_loss = 'closs',
+              starting_latitude = 'slat',
+              starting_longitude = 'slon',
+              ending_latitude = 'elat',
+              ending_longitude = 'elon',
+              length_miles = 'len',
+              width_yards = 'wid',
+              num_states_effected = 'ns',
+              entire_track = 'sn',
+              segment_number = 'sg',
+              county_1 = 'f1',
+              county_2 = 'f2',
+              county_3 = 'f3',
+              county_4 = 'f4',
+              edited_county = 'fc')
+
+df <- rename(df, all_of(torn_names)) %>%
+    mutate(row_id = row_number())
+
+# Convert from wide to long format and then back to wide format
+
+df <- df %>%
+    pivot_longer(cols = starts_with('county'),
+                 names_to = 'county_number',
+                 values_to = 'county_fips',
+                 names_prefix = "county_") %>% 
+    filter(county_fips != 0)
+
+getColor <- function(category) {
+    case_when(
+        category == 0 ~ "blue",
+        category == 1 ~ "green3",
+        category == 2 ~ "orange",
+        category == 3 ~ "darkorange3",
+        category == 4 ~ "red3",
+        TRUE ~ "gray"
+    )
+}
+```
+
+## A glimpse of the data
+```{r class.source = 'fold-hide', cache=TRUE}
+skim_variable <- names(df)
+
+
+df %>% 
+    skimr::skim() %>% 
+    dplyr::select(skim_type, skim_variable) %>% 
+    datatable(colnames = c("Types", 'Name'))
+```
+
+### Working to Embed this Shiny App and spruce it up
+<iframe 
+    src="https://morganbjohnston.shinyapps.io/Tornados/" 
+    style="border: none; width: 100%; height: 500px;"
+    sandbox="allow-scripts"
+></iframe>
+
+In the mean time here is a link:
+<a 
+    href="https://morganbjohnston.shinyapps.io/Tornados/"
+    target="_blank"
+>Morgan's Tornado Shiny App</a>
+
+Also still need to handle for null values for ending coordinates that are 0.
+
